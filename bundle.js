@@ -18,7 +18,7 @@ function addEntry() {
   reader.onload = function(e) {
     const image = new Image();
     image.onload = function() {
-      entries.push({ image: e.target.result, comment: comment });
+      entries.push({ image: e.target.result, comment: comment, width: image.width, height: image.height });
       updateEntryList();
       fileInput.value = '';
       document.getElementById('comment').value = '';
@@ -72,16 +72,18 @@ function finishReport() {
     const entry = entries[i];
     const img = new Image();
     img.onload = () => {
-      const width = 180;
-      const ratio = img.height / img.width;
-      const height = 80;
+      const maxHeight = 226; // 8 cm
+      const ratio = img.width / img.height;
+      const height = maxHeight;
+      const width = height * ratio;
+      const x = (210 - width) / 2;
 
       if (y + height > 270) {
         doc.addPage();
         y = 20;
       }
 
-      doc.addImage(img, 'JPEG', 15, y, width, height);
+      doc.addImage(img, 'JPEG', x, y, width, height);
       y += height + 10;
 
       doc.setFont(undefined, 'bold');
