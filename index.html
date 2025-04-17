@@ -2,17 +2,46 @@
 <html lang="sl">
   <head>
     <meta charset="UTF-8" />
+    <link rel="manifest" href="./manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kontrolni Pregled</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 600px;
+        margin: auto;
+        padding: 1rem;
+      }
+      input, textarea, button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 16px;
+      }
+      .entry {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-top: 10px;
+      }
+      img {
+        max-height: 200px;
+        object-fit: contain;
+        display: block;
+        margin-bottom: 10px;
+      }
+    </style>
   </head>
   <body>
-    <div id="root">
-      <h1>Kontrolni Pregled</h1>
-      <p>Aplikacija deluje! 🎉</p>
-    </div>
-    <script>
-      // Enostaven prikaz, da stran deluje
-      console.log("App loaded");
-    </script>
+    <h1>Kontrolni Pregled</h1>
+    <input type="text" id="customer" placeholder="Ime stranke" />
+    <p id="datetime"></p>
+    <input type="file" accept="image/*" id="imageInput" />
+    <textarea id="comment" placeholder="Komentar"></textarea>
+    <button onclick="addEntry()">Dodaj novo</button>
+    <button onclick="finishReport()">Zaključi poročilo</button>
+
+    <div id="entries"></div>
+
+    <script src="./bundle.js"></script>
   </body>
 </html>

@@ -1,9 +1,9 @@
 {
   "name": "Kontrolni Pregled",
   "short_name": "Pregled",
-  "start_url": "./",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#317EFB",
+  "theme_color": "#0d6efd",
   "icons": []
 }
