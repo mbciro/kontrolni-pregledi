@@ -1,14 +1,16 @@
 const { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun } = docx;
 
 document.getElementById('datetime').innerText = "Datum in ura: " + new Date().toLocaleString();
-
 let entries = [];
 
 function addEntry() {
   const fileInput = document.getElementById('imageInput');
   const comment = document.getElementById('comment').value;
   const file = fileInput.files[0];
-  if (!file || !comment) return alert('Dodaj sliko in komentar');
+  if (!file || !comment) {
+    alert('Dodaj sliko in komentar');
+    return;
+  }
 
   const reader = new FileReader();
   reader.onload = function(e) {
@@ -35,8 +37,13 @@ function finishReport() {
   const company = document.getElementById('companyName').value;
   const author = document.getElementById('authorName').value;
   const date = new Date().toLocaleString();
+  const status = document.getElementById('statusMessage');
+  status.textContent = "";
 
-  if (!company || !author || entries.length === 0) return alert('Manjkajo podatki.');
+  if (!company || !author || entries.length === 0) {
+    alert('Vnesi vse podatke in vsaj eno sliko s komentarjem.');
+    return;
+  }
 
   const doc = new Document({
     sections: [{
@@ -45,9 +52,7 @@ function finishReport() {
         new Paragraph({ text: "Datum in ura: " + date }),
         ...entries.flatMap(e => [
           new Paragraph({ children: [new ImageRun({ data: dataURLtoBlob(e.image), transformation: { height: 226 } })], alignment: AlignmentType.CENTER }),
-          new Paragraph({
-            children: [new TextRun({ text: "Komentar:", bold: true }), new TextRun({ text: " " + e.comment })]
-          }),
+          new Paragraph({ children: [new TextRun({ text: "Komentar:", bold: true }), new TextRun({ text: " " + e.comment })] }),
           new Paragraph({ text: "" })
         ]),
         new Paragraph({ text: "Pripravil: " + author })
@@ -56,11 +61,18 @@ function finishReport() {
   });
 
   Packer.toBlob(doc).then(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "porocilo.docx";
-    a.click();
+    const fileName = "porocilo_" + Date.now() + ".docx";
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+
+    // iOS workaround: ročno dodajanje v DOM
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    status.textContent = "Poročilo je bilo pripravljeno.";
+  }).catch(err => {
+    alert("Napaka pri pripravi poročila: " + err.message);
   });
 }
 
