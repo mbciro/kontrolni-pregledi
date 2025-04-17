@@ -7,7 +7,7 @@
   <link rel="manifest" href="./manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0d6efd">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 1rem; }
     input, textarea, button { width: 100%; margin-top: 10px; padding: 10px; font-size: 16px; }
@@ -23,7 +23,7 @@
   <input type="file" accept="image/*" id="imageInput" />
   <textarea id="comment" placeholder="Komentar"></textarea>
   <button onclick="addEntry()">Dodaj novo</button>
-  <button onclick="finishReport()">Zaključi poročilo</button>
+  <button onclick="finishReport()">Zaključi poročilo (PDF)</button>
 
   <div id="entries"></div>
   <p id="statusMessage" style="color: green; margin-top: 1rem;"></p>

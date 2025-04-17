@@ -4,8 +4,11 @@ let entries = [];
 
 function addEntry() {
   const fileInput = document.getElementById('imageInput');
-  const comment = document.getElementById('comment').value;
+  const comment = document.getElementById('comment').value.trim();
   const file = fileInput.files[0];
+  const status = document.getElementById('statusMessage');
+  status.textContent = "";
+
   if (!file || !comment) {
     alert('Dodaj sliko in komentar');
     return;
@@ -13,10 +16,17 @@ function addEntry() {
 
   const reader = new FileReader();
   reader.onload = function(e) {
-    entries.push({ image: e.target.result, comment: comment });
-    updateEntryList();
-    fileInput.value = '';
-    document.getElementById('comment').value = '';
+    const image = new Image();
+    image.onload = function() {
+      entries.push({ image: e.target.result, comment: comment });
+      updateEntryList();
+      fileInput.value = '';
+      document.getElementById('comment').value = '';
+    };
+    image.onerror = function() {
+      alert('Slike ni bilo mogoče naložiti.');
+    };
+    image.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -27,14 +37,14 @@ function updateEntryList() {
   entries.forEach((entry, index) => {
     const div = document.createElement('div');
     div.className = 'entry';
-    div.innerHTML = `<img src="${entry.image}" /><p>${entry.comment}</p>`;
+    div.innerHTML = `<img src="${entry.image}" /><p><strong>Komentar:</strong> ${entry.comment}</p>`;
     container.appendChild(div);
   });
 }
 
 function finishReport() {
-  const company = document.getElementById('companyName').value;
-  const author = document.getElementById('authorName').value;
+  const company = document.getElementById('companyName').value.trim();
+  const author = document.getElementById('authorName').value.trim();
   const date = new Date().toLocaleString();
   const status = document.getElementById('statusMessage');
   status.textContent = "";
@@ -81,6 +91,9 @@ function finishReport() {
       y += 20;
 
       processEntries(i + 1);
+    };
+    img.onerror = () => {
+      alert("Napaka pri nalaganju slike.");
     };
     img.src = entry.image;
   };
