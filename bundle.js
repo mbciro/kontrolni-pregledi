@@ -7,16 +7,17 @@ let entries = [];
 function addEntry() {
   const fileInput = document.getElementById('imageInput');
   const comment = document.getElementById('comment').value;
-  if (!fileInput.files[0] || !comment) return alert('Dodaj sliko in komentar');
+  const file = fileInput.files[0];
+  if (!file || !comment) return alert('Dodaj sliko in komentar');
 
   const reader = new FileReader();
   reader.onload = function(e) {
     entries.push({ image: e.target.result, comment: comment });
     updateEntryList();
-    document.getElementById('imageInput').value = '';
+    fileInput.value = '';
     document.getElementById('comment').value = '';
   };
-  reader.readAsDataURL(fileInput.files[0]);
+  reader.readAsDataURL(file);
 }
 
 function updateEntryList() {
@@ -30,18 +31,10 @@ function updateEntryList() {
   });
 }
 
-function clearSignature() {
-  const canvas = document.getElementById('signaturePad');
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
 function finishReport() {
   const company = document.getElementById('companyName').value;
   const author = document.getElementById('authorName').value;
   const date = new Date().toLocaleString();
-  const canvas = document.getElementById('signaturePad');
-  const signatureDataUrl = canvas.toDataURL();
 
   if (!company || !author || entries.length === 0) return alert('Manjkajo podatki.');
 
@@ -57,10 +50,7 @@ function finishReport() {
           }),
           new Paragraph({ text: "" })
         ]),
-        new Paragraph({ text: "Pripravil: " + author }),
-        new Paragraph({
-          children: [new ImageRun({ data: dataURLtoBlob(signatureDataUrl), transformation: { height: 100 } })]
-        })
+        new Paragraph({ text: "Pripravil: " + author })
       ]
     }]
   });
@@ -84,43 +74,4 @@ function dataURLtoBlob(dataURL) {
     ia[i] = byteString.charCodeAt(i);
   }
   return new Blob([ab], { type: mimeString });
-}
-
-// podpis s prstom
-const canvas = document.getElementById('signaturePad');
-const ctx = canvas.getContext('2d');
-let drawing = false;
-canvas.addEventListener('mousedown', () => drawing = true);
-canvas.addEventListener('mouseup', () => drawing = false);
-canvas.addEventListener('mouseout', () => drawing = false);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('touchstart', () => drawing = true);
-canvas.addEventListener('touchend', () => drawing = false);
-canvas.addEventListener('touchcancel', () => drawing = false);
-canvas.addEventListener('touchmove', drawTouch);
-
-function draw(e) {
-  if (!drawing) return;
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "#000";
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
-}
-
-function drawTouch(e) {
-  if (!drawing) return;
-  const rect = canvas.getBoundingClientRect();
-  const touch = e.touches[0];
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "#000";
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x, y);
 }

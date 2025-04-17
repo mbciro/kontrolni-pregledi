@@ -7,7 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
   <style>
     body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 1rem; }
-    input, textarea, button, canvas { width: 100%; margin-top: 10px; padding: 10px; font-size: 16px; }
+    input, textarea, button { width: 100%; margin-top: 10px; padding: 10px; font-size: 16px; }
     .entry { border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
     img { max-height: 200px; object-fit: contain; display: block; margin: 0 auto 10px; }
   </style>
@@ -16,9 +16,6 @@
   <h1>Kontrolni Pregled</h1>
   <input type="text" id="companyName" placeholder="Ime podjetja" />
   <input type="text" id="authorName" placeholder="Pripravil (ime in priimek)" />
-  <p>Podpiši:</p>
-  <canvas id="signaturePad" height="150" style="border:1px solid #ccc;"></canvas>
-  <button onclick="clearSignature()">Počisti podpis</button>
   <p id="datetime"></p>
   <input type="file" accept="image/*" id="imageInput" />
   <textarea id="comment" placeholder="Komentar"></textarea>
